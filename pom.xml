@@ -37,11 +37,6 @@
 		    <version>5.2.0</version>
 		</dependency>
 	</dependencies>
-	<plugin>
-  		<groupId>org.apache.maven.plugins</groupId>
-  		<artifactId>maven-war-plugin</artifactId>
-  		<version>3.3.2</version>
-	</plugin>
 	<properties>
    		<maven.compiler.source>8</maven.compiler.source>
    		<maven.compiler.target>1.8</maven.compiler.target>
