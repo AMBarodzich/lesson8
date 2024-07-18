@@ -2,16 +2,20 @@ def dockerRun = "docker run -d -p 8081:8080 ambarodzich/docker-app:'$BUILD_NUMBE
 
 pipeline {
     agent any
+    
+    tools {
+        maven 'M3'
+    }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/AMBarodzich/lesson8.git']])
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/AMBarodzich/lesson8']])
             }
         }
         stage('build') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean install && mvn clean package'
             }
         }
         stage('docker_build') {
@@ -22,17 +26,17 @@ pipeline {
         stage('docker_push') {
             steps {
                 withCredentials([string(credentialsId: 'DockerHubPwd', variable: 'DockerHubPwd')]) {
-                   sh 'docker login -u ambarodzich -p ${DockerHubPwd}' 
+                    sh 'docker login -u ambarodzich -p ${DockerHubPwd}'
                 }
                 sh 'docker push ambarodzich/docker-app:"$BUILD_NUMBER"'
             }
         }
-        stage('docker_deploy') {
+        stage('deploy') {
             steps {
-                sshagent(['b5960653-0f8b-4bd5-a706-768517b79d23']) {
-                    sh  "ssh -o StrictHostkeyChecking=no ubuntu@172.31.19.170 ${dockerRun}"  
+                sshagent(['jenkins']) {
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.84.132 ${dockerRun}"
                 }
             }
         }
     }
-}    
+}
