@@ -1,4 +1,4 @@
-def dockerRun = "docker run -p 8081:8080 -d ambarodzich/docker-app:'$BUILD_NUMBER'"
+def dockerRun = "docker run -p 8080:8080 -d ambarodzich/docker-app:'${BUILD_NUMBER}'"
 
 pipeline {
     agent any
@@ -14,23 +14,23 @@ pipeline {
                 sh "mvn clean install && mvn clean package"
             }
         }
-        stage('Docker_build') {
+        stage('Build_Docker') {
             steps {
-                sh 'docker build -t ambarodzich/docker-app:"$BUILD_NUMBER" .'
+                sh 'docker build -t ambarodzich/docker-app:"${BUILD_NUMBER}" .'
             }
         }
-        stage('Docker_push') {
+        stage('Push_Docker') {
             steps {
                 withCredentials([string(credentialsId: 'DockerHubPwd', variable: 'DockerHubPwd')]) {
-                    sh "docker login -u ambarodzich -p ${DockerHubPwd}"
-                }
-                sh 'docker push ambarodzich/docker-app:"$BUILD_NUMBER"'
+                    sh "docker login -u ambarodzich -p ${DockerHubPwd} "
+                } 
+                sh 'docker push ambarodzich/docker-app:"${BUILD_NUMBER}"'
             }
         }
         stage('Deploy') {
             steps {
-                sshagent(['jenkins']) {
-                   sh "ssh -o StrictHostKeyChecking=no ubuntu@52.203.230.123 ${dockerRun}"
+                sshagent(['ubuntu']) {
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@54.167.8.20 ${dockerRun}"
                 }
             }
         }
