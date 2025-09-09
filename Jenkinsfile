@@ -27,6 +27,12 @@ pipeline {
                 sh 'docker push ambarodzich/docker-app:"${BUILD_NUMBER}"'
             }
         }
+        stage('Manual Approval') {
+                steps {
+                    input message: 'Proceed to Production Deployment?',
+                          ok: 'Approve'
+                }
+            }
         stage('Deploy') {
             steps {
                 sshagent(['6cb2e3ae-a59f-4c0e-870d-528ebd8bc6d7']) {
