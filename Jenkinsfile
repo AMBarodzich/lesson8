@@ -4,7 +4,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        /*stage('Checkout') {
             steps {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/AMBarodzich/lesson8']])
             }
@@ -26,19 +26,19 @@ pipeline {
                 }
                 sh 'docker push ambarodzich/docker-app:"${BUILD_NUMBER}"'
             }
-        }
+        }/*
         stage('Manual Approval') {
                 steps {
                     input message: 'Proceed to Production Deployment?',
                           ok: 'Approve'
                 }
             }
-        stage('Deploy') {
+        */stage('Deploy') {
             steps {
                 sshagent(['6cb2e3ae-a59f-4c0e-870d-528ebd8bc6d7']) {
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@13.220.117.124 ${dockerRun}"
                 }
             }
-        }
+        }/*
     }
 }
