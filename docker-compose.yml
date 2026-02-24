@@ -1,5 +1,5 @@
 services:
   frontend:
-    image: ambarodzich/docker-app:v3
+    image: ambarodzich/docker-app:latest
     ports:
       - "8080:8080"
