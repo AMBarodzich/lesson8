@@ -30,7 +30,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 sshagent(credentials: ['sshagent'], executable: '') {
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@54.90.254.179 ${dockerRun}"
+                    sh "docker context create remote-target --docker "host=ssh://ubuntu@54.90.254.179" || true
+                    sh "IMAGE_TAG=${BUILD_NUMBER} docker context remote-target compose up -d --remove-orphans"    
                 }
             }
         }
