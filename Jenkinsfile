@@ -32,7 +32,8 @@ pipeline {
                 sshagent(credentials: ['sshagent'], executable: '') {
                     sh """
                         docker context create remote-target --docker "host=ssh://ubuntu@54.90.254.179" || true
-                        IMAGE_TAG=${BUILD_NUMBER} docker context remote-target compose up -d --remove-orphans    
+                        IMAGE_TAG=${BUILD_NUMBER} docker --context remote-target compose up -d --remove-orphans    
+                        docker context rm remote-target || true
                     """
                 }
             }
