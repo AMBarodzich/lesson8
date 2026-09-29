@@ -1,5 +1,5 @@
 services:
   frontend:
-    image: ambarodzich/docker-app:latest
+    image: ambarodzich/docker-app:${IMAGE_TAG}
     ports:
       - "8080:8080"
